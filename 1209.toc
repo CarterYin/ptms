@@ -1,0 +1,4 @@
+\contentsline {section}{\numberline {1}12.02}{2}{section.1}%
+\contentsline {section}{\numberline {2}12.04}{5}{section.2}%
+\contentsline {section}{\numberline {3}12.09}{6}{section.3}%
+\contentsline {section}{\numberline {4}12.11}{7}{section.4}%

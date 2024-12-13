@@ -1,0 +1,748 @@
+% 若编译失败，且生成 .synctex(busy) 辅助文件，可能有两个原因：
+% 1. 需要插入的图片不存在：Ctrl + F 搜索 'figure' 将这些代码注释/删除掉即可
+% 2. 路径/文件名含中文或空格：更改路径/文件名即可
+
+% --------------------- 文章宏包及相关设置 --------------------- %
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% 设定文章类型与编码格式
+\documentclass[UTF8]{article}		
+
+% 物理实验报告所需的其它宏包
+\usepackage{ulem}   % \uline 下划线支持
+\usepackage{circuitikz} % 电路图 tikz 支持
+
+% 本 .tex 专属的宏定义
+    \def\V{\ \mathrm{V}}
+    \def\mV{\ \mathrm{mV}}
+    \def\kV{\ \mathrm{KV}}
+    \def\KV{\ \mathrm{KV}}
+    \def\MV{\ \mathrm{MV}}
+    \def\A{\ \mathrm{A}}
+    \def\mA{\ \mathrm{mA}}
+    \def\kA{\ \mathrm{KA}}
+    \def\KA{\ \mathrm{KA}}
+    \def\MA{\ \mathrm{MA}}
+    \def\O{\ \Omega}
+    \def\mO{\ \Omega}
+    \def\kO{\ \mathrm{K}\Omega}
+    \def\KO{\ \mathrm{K}\Omega}
+    \def\MO{\ \mathrm{M}\Omega}
+    \def\Hz{\ \mathrm{Hz}}
+
+% 自定义宏定义
+    \def\N{\mathbb{N}}
+    \def\F{\mathbb{F}}
+    \def\Z{\mathbb{Z}}
+    \def\Q{\mathbb{Q}}
+    \def\R{\mathbb{R}}
+    \def\C{\mathbb{C}}
+    \def\T{\mathbb{T}}
+    \def\S{\mathbb{S}}
+    %\def\A{\mathbb{A}}
+    \def\I{\mathscr{I}}
+    \def\d{\mathrm{d}}
+    \def\p{\partial}
+
+
+% 导入基本宏包
+    \usepackage[UTF8]{ctex}     % 设置文档为中文语言
+    \usepackage{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    \hypersetup{
+        colorlinks=true,    % false:边框链接 ; true:彩色链接
+        citecolor={blue},    % 文献引用颜色
+        linkcolor={blue},   % 目录 (我们在目录处单独设置)，公式，图表，脚注等内部链接颜色
+        urlcolor={orange},    % 网页 URL 链接颜色，包括 \href 中的 text
+        % cyan 浅蓝色 
+        % magenta 洋红色
+        % yellow 黄色
+        % black 黑色
+        % white 白色
+        % red 红色
+        % green 绿色
+        % blue 蓝色
+        % gray 灰色
+        % darkgray 深灰色
+        % lightgray 浅灰色
+        % brown 棕色
+        % lime 石灰色
+        % olive 橄榄色
+        % orange 橙色
+        % pink 粉红色
+        % purple 紫色
+        % teal 蓝绿色
+        % violet 紫罗兰色
+    }
+    % \usepackage{docmute}    % 宏包：子文件导入时自动去除导言区，用于主/子文件的写作方式，\include{./51单片机笔记}即可。注：启用此宏包会导致.tex文件capacity受限。
+    \usepackage{amsmath}    % 宏包：数学公式
+    \usepackage{mathrsfs}   % 宏包：提供更多数学符号
+    \usepackage{amssymb}    % 宏包：提供更多数学符号
+    \usepackage{pifont}     % 宏包：提供了特殊符号和字体
+    \usepackage{extarrows}  % 宏包：更多箭头符号 
+    \usepackage{multicol}   % 宏包：支持多栏 
+    \usepackage{amsfonts}   % 宏包：数学字体
+
+% 文章页面margin设置
+    \usepackage[a4paper]{geometry}
+        \geometry{top=0.75in}
+        \geometry{bottom=0.75in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 配置数学环境
+    \usepackage{amsthm} % 宏包：数学环境配置
+    % theorem-line 环境自定义
+        \newtheoremstyle{MyLineTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {\kaishu}% <body font> 默认使用正文字体, \kaishu 为楷体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {:\ \ }% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyLineTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{LineTheorem}{Theorem.\,}
+    % theorem-block 环境自定义
+        \newtheoremstyle{MyBlockTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {\kaishu}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：\\ \indent}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyBlockTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{BlockTheorem}[LineTheorem]{Theorem.\,} % 使用 LineTheorem 的计数器
+    % definition 环境自定义
+        \newtheoremstyle{MySubsubsectionStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：\\ \indent}% <punctuation after theorem head>
+            {0pt}% <space after theorem head>
+            {\textbf{#3}}% 设置标题内容顺序
+        \theoremstyle{MySubsubsectionStyle} % 应用自定义的定理样式
+        \newtheorem{definition}{}
+
+%宏包：有色文本框（proof环境）及其设置
+    \usepackage{xcolor}    %设置插入的文本框颜色
+    \usepackage[strict]{changepage}     % 提供一个 adjustwidth 环境
+    \usepackage{framed}     % 实现方框效果
+        \definecolor{graybox_color}{rgb}{0.95,0.95,0.96} % 文本框颜色。修改此行中的 rgb 数值即可改变方框纹颜色，具体颜色的rgb数值可以在网站https://colordrop.io/ 中获得。（截止目前的尝试还没有成功过，感觉单位不一样）（找到喜欢的颜色，点击下方的小眼睛，找到rgb值，复制修改即可）
+        \newenvironment{graybox}{%
+        \def\FrameCommand{%
+        \hspace{1pt}%
+        {\color{gray}\small \vrule width 2pt}%
+        {\color{graybox_color}\vrule width 4pt}%
+        \colorbox{graybox_color}%
+        }%
+        \MakeFramed{\advance\hsize-\width\FrameRestore}%
+        \noindent\hspace{-4.55pt}% disable indenting first paragraph
+        \begin{adjustwidth}{}{7pt}%
+        \vspace{2pt}\vspace{2pt}%
+        }
+        {%
+        \vspace{2pt}\end{adjustwidth}\endMakeFramed%
+        }
+
+% 外源代码插入设置
+    % matlab 代码插入设置
+    \usepackage{matlab-prettifier}
+        \lstset{style=Matlab-editor}    % 继承 matlab 代码高亮 , 此行不能删去
+    \usepackage[most]{tcolorbox} % 引入tcolorbox包 
+    \usepackage{listings} % 引入listings包
+        \tcbuselibrary{listings, skins, breakable}
+        \newfontfamily\codefont{Consolas} % 定义需要的 codefont 字体
+        \lstdefinestyle{MatlabStyle_inc}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+            xleftmargin=15pt,   % 左边距
+            %frame=single, % single 为包围式单线框
+            frame=shadowbox,    % shadowbox 为带阴影包围式单线框效果
+            %escapeinside=``,   % 允许在代码块中使用 LaTeX 命令 (此行无用)
+            %frameround=tttt,    % tttt 表示四个角都是圆角
+            framextopmargin=0pt,    % 边框上边距
+            framexbottommargin=0pt, % 边框下边距
+            framexleftmargin=5pt,   % 边框左边距
+            framexrightmargin=5pt,  % 边框右边距
+            rulesepcolor=\color{red!20!green!20!blue!20}, % 阴影框颜色设置
+            %backgroundcolor=\color{blue!10}, % 背景颜色
+        }
+        \lstdefinestyle{MatlabStyle_src}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+        }
+        \newtcblisting{matlablisting}{
+            %arc=2pt,        % 圆角半径
+            % 调整代码在 listing 中的位置以和引入文件时的格式相同
+            top=0pt,
+            bottom=0pt,
+            left=-5pt,
+            right=-5pt,
+            listing only,   % 此句不能删去
+            listing style=MatlabStyle_src,
+            breakable,
+            colback=white,   % 选一个合适的颜色
+            colframe=black!0,   % 感叹号后跟不透明度 (为 0 时完全透明)
+        }
+        \lstset{
+            style=MatlabStyle_inc,
+        }
+
+% table 支持
+    \usepackage{booktabs}   % 宏包：三线表
+    \usepackage{tabularray} % 宏包：表格排版
+    \usepackage{longtable}  % 宏包：长表格
+
+% figure 设置
+    \usepackage{graphicx}  % 支持 jpg, png, eps, pdf 图片 
+    \usepackage{svg}       % 支持 svg 图片
+        \svgsetup{
+            % 指向 inkscape.exe 的路径
+            inkscapeexe = C:/aa_MySame/inkscape/bin/inkscape.exe, 
+            % 一定程度上修复导入后图片文字溢出几何图形的问题
+            inkscapelatex = false                 
+        }
+    \usepackage{subcaption} % 用于子图和小图注  
+
+% 图表进阶设置
+    \usepackage{caption}    % 图注、表注
+        \captionsetup[figure]{name=图}  
+        \captionsetup[table]{name=表}
+        \captionsetup{
+            labelfont=bf, % 设置标签为粗体
+            textfont=bf,  % 设置文本为粗体
+            font=small  
+        }
+    \usepackage{float}     % 图表位置浮动设置 
+
+% 圆圈序号自定义
+    \newcommand*\circled[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=0.8pt, line width = 0.03em] (char) {\small \bfseries #1};}}   % TikZ solution
+
+% 列表设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+        \setlist[enumerate]{
+            label=(\arabic*) ,   % 设置序号样式为加粗的 (1) (2) (3)
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em} 
+        \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em}
+        \newlist{circledenum}{enumerate}{1} % 创建一个新的枚举环境  
+        \setlist[circledenum,1]{  
+            label=\protect\circled{\arabic*}, % 使用 \arabic* 来获取当前枚举计数器的值，并用 \circled 包装它  
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em
+        }  
+
+% 其它设置
+    % 脚注设置
+        \renewcommand\thefootnote{\ding{\numexpr171+\value{footnote}}}
+    % 参考文献引用设置
+        \bibliographystyle{unsrt}   % 设置参考文献引用格式为unsrt
+        \newcommand{\upcite}[1]{\textsuperscript{\cite{#1}}}     % 自定义上角标式引用
+    % 文章序言设置
+        \newcommand{\cnabstractname}{序言}
+        \newenvironment{cnabstract}{%
+            \par\Large
+            \noindent\mbox{}\hfill{\bfseries \cnabstractname}\hfill\mbox{}\par
+            \vskip 2.5ex
+            }{\par\vskip 2.5ex}
+
+% 文章默认字体设置
+    \usepackage{fontspec}   % 宏包：字体设置
+        \setmainfont{SimSun}    % 设置中文字体为宋体字体
+        \setCJKmainfont[AutoFakeBold=3]{SimSun} % 设置加粗字体为 SimSun 族，AutoFakeBold 可以调整字体粗细
+        \setmainfont{Times New Roman} % 设置英文字体为Times New Roman
+
+% 各级标题自定义设置
+    \usepackage{titlesec}   
+        % chapter 标题自定义设置
+        \titleformat{\chapter}[hang]{\normalfont\huge\bfseries\centering\boldmath}{第\,\thechapter\,章}{20pt}{}
+        \titlespacing*{\chapter}{0pt}{-20pt}{20pt} % 控制上下间距
+        % section标题自定义设置 
+        \titleformat{\section}[hang]{\normalfont\Large\bfseries\boldmath}{§\,\thesection\,}{8pt}{}
+        % subsubsection标题自定义设置
+        \titlespacing*{\subsubsection}{0pt}{3pt}{0pt} % 控制上下间距
+
+
+% --------------------- 文章宏包及相关设置 --------------------- %
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+
+
+% ------------------------ 文章信息区 ------------------------ %
+% ------------------------ 文章信息区 ------------------------ %
+% 页眉页脚设置
+\usepackage{fancyhdr}   %宏包：页眉页脚设置
+    \pagestyle{fancy}
+    \fancyhf{}
+    \cfoot{\thepage}
+    \renewcommand\headrulewidth{1pt}
+    \renewcommand\footrulewidth{0pt}
+    %\rhead{\bfseries \large {\color{red} 分组序号: 3-07}}    
+    \chead{概率论与数理统计作业,\ 尹超,\ 2023K8009926003}
+    \lhead{2024.12.8}
+
+% 文档信息设置
+%\title{这里是标题\\The Title of the Report}
+%\author{尹超\\ \footnotesize 中国科学院大学，北京 100049\\ CarterYin \\ %\footnotesize University of Chinese Academy of Sciences, Beijing %100049, China}
+%\date{\footnotesize 2024.8 -- 2025.1}
+
+% 开始编辑文章
+
+\begin{document}
+%\noindent\begin{flushright}
+%    \zihao{2}{分组序号: YK02-2}
+%\end{flushright}
+
+%\setCJKfamilyfont{boldsong}[AutoFakeBold = {2.17}]{SimSun}
+%\newcommand*{\boldsong}{\CJKfamily{boldsong}}
+
+\begin{center}\large
+    \noindent{\huge\bfseries\bfseries《\ \ 概\ \ 率\ \ 论\ \ 与\ \ 数\ \ 理\ \ 统\ \ 计\ \ 作\ \ 业\ \ 》 }
+    \\\vspace{0.4cm}
+    %\noindent\textit{
+    %    \textbf{\bfseries 实验名称：}\uline{\hspace{0.8cm} \bfseries 气轨上弹簧振子的简谐振动及瞬时速度的测定 \hspace{0.8cm}}\hspace{0.4cm} 
+    %    指导教师：\uline{\hspace{0.5cm}某某\hspace{0.5cm}}}
+    %\\\vspace{0.1cm}
+    \noindent\textit{
+        姓名：\uline{\,\,\,尹超\,\,\,}\hspace{0.2cm}
+        学号：\uline{\,\,\,{\upshape 2023K8009926003}\,\,\,}\hspace{0.2cm}
+        专业：\uline{\,\,\,人工智能\,\,\,}\hspace{0.2cm}
+        班级：\uline{\,\,\,\upshape{2313}\,\,\,}
+        %\,座号：\uline{\,\,\,\upshape{4}\,\,\,}
+    }
+    \\\vspace{0.1cm}
+    %\noindent\textit{
+    %    实验日期：\uline{\,\,{\upshape 2024.12.18}\,\,}\hspace{0.2cm}
+    %    实验地点：\uline{\,\,\,教学楼{\upshape 716}\,\,\,}\hspace{0.2cm}
+    %    是否调课/补课：\uline{\hspace{0.26cm}否 \hspace{0.26cm}}\hspace{0.2cm}
+    %    成绩：\uline{\hspace{2cm}}}
+\end{center}
+% \vspace{-0.2cm}
+\noindent\rule{\textwidth}{0.1em}   % 分割线
+% ------------------------ 文章信息区 ------------------------ %
+% ------------------------ 文章信息区 ------------------------ %
+
+
+% 目录
+\setcounter{tocdepth}{2}  % 目录深度为 2（不显示 subsubsection）
+\noindent\tableofcontents\thispagestyle{fancy}   % 显示页码、页眉等
+
+% 控制目录不换页
+%\vspace{1cm}
+%\setcounter{tocdepth}{2}  % 目录深度为 2（不显示 subsubsection）
+%\noindent\begin{minipage}{\textwidth}
+%\tableofcontents\thispagestyle{fancy}   % 显示页码、页眉等   
+%\end{minipage}  
+
+\newpage
+%\rhead{\bfseries 分组序号: 3-07-4}
+
+
+
+% >> --------------------- 下面是正文内容 --------------------- << %
+% ------------------------ 下面是正文内容 ------------------------ %
+% ------------------------ 下面是正文内容 ------------------------ %
+% ------------------------ 下面是正文内容 ------------------------ %
+% ------------------------ 下面是正文内容 ------------------------ %
+% >> --------------------- 下面是正文内容 --------------------- << %
+
+\section{12.02}
+\subsection*{题目描述}
+\textbf{Show that in simple linear regression,}
+\[
+\text{Coefficient of Determination} = (\text{Coefficient of correlation})^2
+\]
+\textbf{Where Coefficient of Determination is defined as:}
+\[
+\text{Coefficient of Determination} = \frac{SS_{\text{total}} - SS_{\text{err}}}{SS_{\text{total}}}
+\]
+
+\textbf{证明在简单线性回归中，}
+\[
+\text{决定系数} = (\text{相关系数})^2
+\]
+\textbf{其中决定系数定义为：}
+\[
+\text{决定系数} = \frac{SS_{\text{total}} - SS_{\text{err}}}{SS_{\text{total}}}
+\]
+
+\subsection*{解答过程}
+
+在简单线性回归中，我们将因变量 \( y \) 与自变量 \( x \) 之间的关系建模为：
+
+\[
+y = \beta_0 + \beta_1 x + \epsilon
+\]
+
+其中：
+- \( \beta_0 \) 是截距。
+- \( \beta_1 \) 是斜率。
+- \( \epsilon \) 是误差项。
+
+决定系数（R²）定义为：
+
+\[
+R^2 = \frac{SS_{\text{total}} - SS_{\text{err}}}{SS_{\text{total}}}
+\]
+
+其中：
+- \( SS_{\text{total}} \) 是 \( y \) 的总平方和，表示数据的总方差。
+- \( SS_{\text{err}} \) 是残差平方和，表示回归模型无法解释的方差。
+
+相关系数（r）是皮尔逊相关系数，用来衡量 \( x \) 和 \( y \) 之间线性关系的强度。在简单线性回归中，相关系数 \( r \) 的公式为：
+
+\[
+r = \frac{\text{Cov}(x, y)}{\sigma_x \sigma_y}
+\]
+
+其中：
+- \( \text{Cov}(x, y) \) 是 \( x \) 和 \( y \) 的协方差。
+- \( \sigma_x \) 和 \( \sigma_y \) 分别是 \( x \) 和 \( y \) 的标准差。
+
+决定系数（R²）可以写成：
+
+\[
+R^2 = \frac{SS_{\text{reg}}}{SS_{\text{total}}}
+\]
+
+其中回归平方和 \( SS_{\text{reg}} \) 是总平方和和误差平方和的差：
+
+\[
+SS_{\text{reg}} = SS_{\text{total}} - SS_{\text{err}} = \sum_{i=1}^{n} (\hat{y}_i - \bar{y})^2
+\]
+
+因此，决定系数 \( R^2 \) 与相关系数 \( r \) 的关系是：
+
+\[
+r^2 = \frac{SS_{\text{reg}}}{SS_{\text{total}}}
+\]
+
+所以我们可以得出结论：
+
+\[
+R^2 = r^2
+\]
+
+这证明了在简单线性回归中，决定系数（R²）等于相关系数（r）的平方。\\
+
+\cleardoublepage
+
+\subsection*{题目描述}
+假设 $Y_i = b_0 + b_1 x_i + e_i$，其中 $e_1, e_2, \ldots, e_n$ 独立同分布，且 $e_i \sim N(0, \sigma^2)$。
+
+找到 $b_0$ 和 $b_1$ 的最大似然估计并验证它们是最小二乘估计。
+
+\subsection*{解答过程}
+
+首先，写出似然函数：
+\[
+L(b_0, b_1, \sigma^2) = \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(Y_i - b_0 - b_1 x_i)^2}{2\sigma^2}\right)
+\]
+
+取对数得到对数似然函数：
+\[
+\ell(b_0, b_1, \sigma^2) = -\frac{n}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^n (Y_i - b_0 - b_1 x_i)^2
+\]
+
+对 $b_0$ 和 $b_1$ 求偏导数并令其等于零：
+\[
+\frac{\partial \ell}{\partial b_0} = \frac{1}{\sigma^2} \sum_{i=1}^n (Y_i - b_0 - b_1 x_i) = 0
+\]
+\[
+\frac{\partial \ell}{\partial b_1} = \frac{1}{\sigma^2} \sum_{i=1}^n (Y_i - b_0 - b_1 x_i)x_i = 0
+\]
+
+解这两个方程可以得到 $b_0$ 和 $b_1$ 的最大似然估计：
+\[
+b_1 = \frac{\sum_{i=1}^n (x_i - \bar{x})(Y_i - \bar{Y})}{\sum_{i=1}^n (x_i - \bar{x})^2}
+\]
+\[
+b_0 = \bar{Y} - b_1 \bar{x}
+\]
+
+这正是最小二乘估计的公式，因此最大似然估计和最小二乘估计是一致的。
+
+
+
+
+
+
+\cleardoublepage
+
+\section{12.04}
+
+\subsection*{题目描述}
+
+在简单线性回归模型中，证明 ANOVA 中的 F 统计量是用于检验 $H_0: b_1 = 0$ 与 $H_1: b_1 \neq 0$ 的 T 统计量的平方。
+
+\subsection*{证明}
+
+在简单线性回归中，模型为：
+\[
+Y_i = b_0 + b_1 x_i + e_i
+\]
+
+假设检验 $H_0: b_1 = 0$ 与 $H_1: b_1 \neq 0$，T 统计量定义为：
+\[
+t = \frac{b_1}{\text{SE}(b_1)}
+\]
+
+其中，$\text{SE}(b_1)$ 是 $b_1$ 的标准误。
+
+ANOVA 中的 F 统计量定义为：
+\[
+F = \frac{\text{MS}_{\text{reg}}}{\text{MS}_{\text{err}}}
+\]
+
+其中，$\text{MS}_{\text{reg}}$ 是回归均方，$\text{MS}_{\text{err}}$ 是误差均方。
+
+在简单线性回归中，$\text{MS}_{\text{reg}}$ 和 $\text{MS}_{\text{err}}$ 可以表示为：
+\[
+\text{MS}_{\text{reg}} = \frac{SS_{\text{reg}}}{1}
+\]
+\[
+\text{MS}_{\text{err}} = \frac{SS_{\text{err}}}{n-2}
+\]
+
+其中，$SS_{\text{reg}}$ 是回归平方和，$SS_{\text{err}}$ 是误差平方和。
+
+由于 $SS_{\text{reg}} = b_1^2 \sum_{i=1}^n (x_i - \bar{x})^2$，我们有：
+\[
+F = \frac{b_1^2 \sum_{i=1}^n (x_i - \bar{x})^2}{\frac{SS_{\text{err}}}{n-2}}
+\]
+
+注意到 $\text{SE}(b_1) = \sqrt{\frac{SS_{\text{err}}}{(n-2) \sum_{i=1}^n (x_i - \bar{x})^2}}$，我们可以得到：
+\[
+t^2 = \left(\frac{b_1}{\text{SE}(b_1)}\right)^2 = \frac{b_1^2}{\frac{SS_{\text{err}}}{(n-2) \sum_{i=1}^n (x_i - \bar{x})^2}} = F
+\]
+
+因此，ANOVA 中的 F 统计量是用于检验 $H_0: b_1 = 0$ 与 $H_1: b_1 \neq 0$ 的 T 统计量的平方。
+
+
+
+
+\cleardoublepage
+
+\section{12.09}
+
+
+
+\subsection*{题目描述}
+
+在 Deming 回归中，当 $\delta = 1$ 时，请证明残差平方和
+\[
+RSS = \frac{1}{1 + \beta_1^2} \sum_{i=1}^{n} (y_i - \beta_1 x_i - \beta_0)^2
+\]
+
+注意：除了笔记中的方法，也可以用直角三角形面积方法。
+
+\subsection*{证明}
+
+在 Deming 回归中，残差平方和 (RSS) 的定义是：
+\[
+RSS = \sum_{i=1}^{n} \frac{(y_i - \beta_0 - \beta_1 x_i)^2}{1 + \beta_1^2}
+\]
+
+当 $\delta = 1$ 时，Deming 回归的目标是最小化以下目标函数：
+\[
+Q = \sum_{i=1}^{n} \frac{(y_i - \beta_0 - \beta_1 x_i)^2}{1 + \beta_1^2}
+\]
+
+我们可以将其重写为：
+\[
+Q = \frac{1}{1 + \beta_1^2} \sum_{i=1}^{n} (y_i - \beta_0 - \beta_1 x_i)^2
+\]
+
+因此，残差平方和 (RSS) 可以表示为：
+\[
+RSS = \frac{1}{1 + \beta_1^2} \sum_{i=1}^{n} (y_i - \beta_0 - \beta_1 x_i)^2
+\]
+
+这证明了在 $\delta = 1$ 的情况下，Deming 回归的残差平方和的公式。
+
+
+
+\subsection*{题目描述}
+设 $\rho$ 和 $r$ 分别为相关系数和皮尔逊相关系数。使用 Fisher 变换，我们已经得到了 $z(\rho) = \frac{1}{2} \log_e \frac{1+\rho}{1-\rho}$ 的渐近 $1 - \alpha$ 置信区间为 $[\zeta_{\text{lower}}, \zeta_{\text{upper}}]$，其中
+\[
+\zeta_{\text{lower}} = z(r) - z_{(1-\alpha/2)}\sqrt{n - \frac{1}{3}}, \quad \zeta_{\text{upper}} = z(r) + z_{(1-\alpha/2)}\sqrt{n - \frac{1}{3}}
+\]
+
+请进一步证明 $\rho$ 的渐近置信区间为：
+\[
+\left[ \frac{\exp\{2 \zeta_{\text{lower}}\} - 1}{\exp\{2 \zeta_{\text{lower}}\} + 1}, \frac{\exp\{2 \zeta_{\text{upper}}\} - 1}{\exp\{2 \zeta_{\text{upper}}\} + 1} \right]
+\]
+
+\subsection*{证明}
+
+
+根据 Fisher 变换，$z(\rho) = \frac{1}{2} \log_e \frac{1+\rho}{1-\rho}$。我们已经得到了 $z(\rho)$ 的置信区间 $[\zeta_{\text{lower}}, \zeta_{\text{upper}}]$。
+
+为了得到 $\rho$ 的置信区间，我们需要对 $z(\rho)$ 的置信区间进行反变换。即：
+\[
+\rho = \frac{\exp\{2 z(\rho)\} - 1}{\exp\{2 z(\rho)\} + 1}
+\]
+
+因此，$\rho$ 的置信区间为：
+\[
+\left[ \frac{\exp\{2 \zeta_{\text{lower}}\} - 1}{\exp\{2 \zeta_{\text{lower}}\} + 1}, \frac{\exp\{2 \zeta_{\text{upper}}\} - 1}{\exp\{2 \zeta_{\text{upper}}\} + 1} \right]
+\]
+
+
+
+\cleardoublepage
+
+
+\section{12.11}
+
+\subsection*{题目描述}
+
+假设 $X_1$ 和 $X_2$ 是方差为 $\sigma^2$ 的不相关随机变量，使用矩阵方法证明 $Y = X_1 + X_2$ 和 $Z = X_1 - X_2$ 是不相关的。
+
+\subsection*{证明}
+
+设 $\mathbf{X} = \begin{pmatrix} X_1 \\ X_2 \end{pmatrix}$，则 $\mathbf{Y} = \begin{pmatrix} Y \\ Z \end{pmatrix}$ 可以表示为：
+\[
+\mathbf{Y} = \mathbf{A} \mathbf{X}
+\]
+其中，$\mathbf{A} = \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}$。
+
+首先，计算 $\mathbf{X}$ 的协方差矩阵 $\Sigma_{\mathbf{X}}$：
+\[
+\Sigma_{\mathbf{X}} = \begin{pmatrix} \sigma^2 & 0 \\ 0 & \sigma^2 \end{pmatrix}
+\]
+
+然后，计算 $\mathbf{Y}$ 的协方差矩阵 $\Sigma_{\mathbf{Y}}$：
+\[
+\Sigma_{\mathbf{Y}} = \mathbf{A} \Sigma_{\mathbf{X}} \mathbf{A}^T
+\]
+
+计算 $\mathbf{A} \Sigma_{\mathbf{X}}$：
+\[
+\mathbf{A} \Sigma_{\mathbf{X}} = \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix} \begin{pmatrix} \sigma^2 & 0 \\ 0 & \sigma^2 \end{pmatrix} = \begin{pmatrix} \sigma^2 & \sigma^2 \\ \sigma^2 & -\sigma^2 \end{pmatrix}
+\]
+
+然后计算 $\mathbf{A} \Sigma_{\mathbf{X}} \mathbf{A}^T$：
+\[
+\Sigma_{\mathbf{Y}} = \begin{pmatrix} \sigma^2 & \sigma^2 \\ \sigma^2 & -\sigma^2 \end{pmatrix} \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix} = \begin{pmatrix} 2\sigma^2 & 0 \\ 0 & 2\sigma^2 \end{pmatrix}
+\]
+
+因此，$\Sigma_{\mathbf{Y}}$ 是对角矩阵，这表明 $Y$ 和 $Z$ 是不相关的。
+
+
+
+
+
+
+\subsection*{题目描述}
+
+考虑拟合曲线 $y = b_0 x + b_1 x^2$ 到点 $(x_i, y_i)$，其中 $i = 1, \ldots, n$。
+
+1. 使用矩阵形式找到 $b_0$ 和 $b_1$ 的最小二乘估计的表达式。
+2. 拟合值是什么？
+
+\subsection*{解答}
+
+1. 使用矩阵形式找到 $b_0$ 和 $b_1$ 的最小二乘估计的表达式。
+
+设 $\mathbf{y}$ 是观测值向量，$\mathbf{X}$ 是设计矩阵，$\mathbf{b}$ 是参数向量，$\mathbf{e}$ 是误差向量，则有：
+\[
+\mathbf{y} = \mathbf{X} \mathbf{b} + \mathbf{e}
+\]
+
+其中，
+\[
+\mathbf{y} = \begin{pmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{pmatrix}, \quad \mathbf{X} = \begin{pmatrix} x_1 & x_1^2 \\ x_2 & x_2^2 \\ \vdots & \vdots \\ x_n & x_n^2 \end{pmatrix}, \quad \mathbf{b} = \begin{pmatrix} b_0 \\ b_1 \end{pmatrix}, \quad \mathbf{e} = \begin{pmatrix} e_1 \\ e_2 \\ \vdots \\ e_n \end{pmatrix}
+\]
+
+最小二乘估计 $\mathbf{b}$ 满足：
+\[
+\mathbf{b} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}
+\]
+
+2. 拟合值是什么？
+
+拟合值 $\hat{\mathbf{y}}$ 为：
+\[
+\hat{\mathbf{y}} = \mathbf{X} \mathbf{b} = \mathbf{X} (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}
+\]
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% VScode 常用快捷键：
+
+% F2:                       变量重命名
+% Ctrl + Enter:             行中换行
+% Alt + up/down:            上下移行
+% 鼠标中键 + 移动:           快速多光标
+% Shift + Alt + up/down:    上下复制
+% Ctrl + left/right:        左右跳单词
+% Ctrl + Backspace/Delete:  左右删单词    
+% Shift + Delete:           删除此行
+% Ctrl + J:                 打开 VScode 下栏(输出栏)
+% Ctrl + B:                 打开 VScode 左栏(目录栏)
+% Ctrl + `:                 打开 VScode 终端栏
+% Ctrl + 0:                 定位文件
+% Ctrl + Tab:               切换已打开的文件(切标签)
+% Ctrl + Shift + P:         打开全局命令(设置)
+
+% Latex 常用快捷键：
+
+% Ctrl + Alt + J:           由代码定位到PDF
